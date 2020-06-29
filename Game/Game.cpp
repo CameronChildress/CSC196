@@ -21,7 +21,7 @@ int main()
     char name[] = "ChildressC"; 
     Core::Init(name, 800, 600);
     Core::RegisterUpdateFn(Update);
-    Core::DrawFn(Draw);
+    Core::RegisterDrawFn(Draw);
     Core::GameLoop(); 
     Core::Shutdown();
 }
