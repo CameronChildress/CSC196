@@ -9,17 +9,21 @@
 #include "Math/Transform.h"
 #include "Graphics/Shape.h"
 #include "Object/Actor.h"
+#include "Actors/Player.h"
+#include "Actors/Enemy.h"
 #include <iostream>
 #include <string>
 
-float speed = 300;
+float thrust{ 300 };
 
 std::vector<nc::Vector2> points = { { 5, -5 }, { 10, -5 }, { -5, 10 }, { -5, 5 } };
 nc::Color color{ 0, 1, 0 };
 nc::Shape ship;
 
-//nc::Actor player;
-//nc::Actor enemy;
+nc::Player player;
+nc::Enemy enemy;
+
+nc::Vector2 velocity;
 
 nc::Transform transform{ {400, 300}, 4.0f, 0.0f };
 
@@ -52,23 +56,12 @@ bool Update(float dt) //dt -> delta time (60 fps) (1 / 60 = 0.016)
     int x, y;
     Core::Input::GetMousePos(x, y);
 
-    //nc::Vector2 target = nc::Vector2{ x, y };
-    //nc::Vector2 direction = target - position; //(head <- tail)
+    player.Update(dt);
+    enemy.Update(dt);
 
-    //direction.Normalize();
+    //transform.position = nc::Clamp(transform.position, { 0,0 }, { 800,600 });
 
-    nc::Vector2 force;
-    if (Core::Input::IsPressed('W')) { force = nc::Vector2::forward * speed * dt; }
-    nc::Vector2 direction = force;
-    direction = nc::Vector2::Rotate(direction, transform.angle);
-    transform.position += direction;
-    //player.GetTransform().position = player.GetTransform().position + direction;
-
-    //rotate
-    if (Core::Input::IsPressed('A')) { transform.angle -= (nc::DegreesToRadians(360.0f) * dt); }
-    if (Core::Input::IsPressed('D')) { transform.angle += (nc::DegreesToRadians(360.0f) * dt); }
-
-    transform.position = nc::Clamp(transform.position, { 0,0 }, { 800,600 });
+    
 
     //translate
     /*if (Core::Input::IsPressed('A')) { position += nc::Vector2::left * speed * dt; }
@@ -96,10 +89,10 @@ void Draw(Core::Graphics& graphics)
 
     if (gameOver) graphics.DrawString(400, 300, "Game Over");
 
-    ship.Draw(graphics, transform);
+    //ship.Draw(graphics, transform);
 
-    /*player.Draw(graphics);
-    enemy.Draw(graphics);*/
+    player.Draw(graphics);
+    enemy.Draw(graphics);
 }
 
 int main()
@@ -108,7 +101,11 @@ int main()
     std::cout << ticks / 1000 / 60 / 60 << std::endl;
     prevTime = GetTickCount();
 
-    ship.Load("ship.txt");
+    //ship.Load("ship.txt");
+    player.Load("player.txt");
+    enemy.Load("enemy.txt");
+
+    enemy.SetTarget(&player);
     //ship.SetColor(nc::Color{ 0, 1, 0 });
 
     char name[] = "ChildressC"; 

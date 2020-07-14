@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shape.h"
+#include "Math/Matrix22.h"
 #include <fstream>
 
 bool nc::Shape::Load(const std::string& filename)
@@ -13,18 +14,21 @@ bool nc::Shape::Load(const std::string& filename)
 
 		//read color
 		stream >> m_color;
+		
+		//get number of points
+		size_t size;
+		std::string line;
+		std::getline(stream, line);
+		size = stoi(line);
 
 		//read points
-		while (!stream.eof())
+		for (size_t i = 0; i < size; i++)
 		{
-			Vector2 point;
-			stream >> point;
-
-			if (!stream.eof())
-			{
-				m_points.push_back(point);
-			}
+			Vector2 v;
+			stream >> v;
+			m_points.push_back(v);
 		}
+
 
 		stream.close();
 	}
@@ -37,6 +41,15 @@ void nc::Shape::Draw(Core::Graphics& graphics, nc::Vector2 position, float scale
 	//Graphics set color
 	graphics.SetColor(m_color);
 
+	Matrix22 mxScale;
+	mxScale.Scale(scale);
+
+	Matrix22 mxRotate;
+	mxRotate.Rotate(angle);
+
+	Matrix22 mx;
+	mx = mxScale * mxRotate;
+
 	for (size_t i = 0; i < m_points.size() - 1; i++)
 	{
 		// local / object space points
@@ -44,13 +57,9 @@ void nc::Shape::Draw(Core::Graphics& graphics, nc::Vector2 position, float scale
 		nc::Vector2 p2 = m_points[i + 1];
 
 		// transform points 
-		//scale
-		p1 *= scale;
-		p2 *= scale;
-
-		//rotate
-		p1 = nc::Vector2::Rotate(p1, angle);
-		p2 = nc::Vector2::Rotate(p2, angle);
+		//scale & rotate
+		p1 = p1 * mx;
+		p2 = p2 * mx;
 
 		//translate
 		p1 += position;

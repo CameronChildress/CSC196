@@ -16,10 +16,10 @@ namespace nc
 
 		void Set(float r, float g, float b) { this->r = r; this->g = g; this->b = b; }
 
-		Color operator + (const Color& c) const { return { r + c.r, g + c.g, b + c.b }; };
-		Color operator - (const Color& c) const { return { r - c.r, g - c.g, b - c.b }; };
-		Color operator * (const Color& c) const { return { r * c.r, g * c.g, b * c.b }; };
-		Color operator / (const Color& c) const { return { r / c.r, g / c.g, b / c.b }; };
+		Color operator + (const Color& c) const { return { r + c.r, g + c.g, b + c.b }; }
+		Color operator - (const Color& c) const { return { r - c.r, g - c.g, b - c.b }; }
+		Color operator * (const Color& c) const { return { r * c.r, g * c.g, b * c.b }; }
+		Color operator / (const Color& c) const { return { r / c.r, g / c.g, b / c.b }; }
 
 		Color operator + (float s) const { return { r + s, g + s, b + s }; }
 		Color operator - (float s) const { return { r - s, g - s, b - s }; }
