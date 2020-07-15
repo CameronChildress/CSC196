@@ -6,11 +6,12 @@ namespace nc
 {
 	void nc::Actor::Load(std::istream& stream)
 	{
-		// stream >> into transform       
-		stream >> m_transform;
-		std::string shapename;
-		stream >> shapename;
-		m_shape.Load(shapename);
+			stream >> m_transform;
+
+			std::string shapename;
+			std::getline(stream, shapename);
+
+			m_shape.Load(shapename);
 	}
 
 	bool Actor::Load(const std::string& filename) 

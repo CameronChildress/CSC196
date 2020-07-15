@@ -31,6 +31,8 @@ namespace nc
         nc::Vector2 enemyVelocity = direction.Normalized() * 100.0f;
         m_transform.position += (enemyVelocity * dt);
         m_transform.angle = std::atan2(direction.y, direction.x) + nc::DegreesToRadians(90.0f);
+
+        m_transform.Update();
     }
 
     void Enemy::Draw(Core::Graphics& graphics)

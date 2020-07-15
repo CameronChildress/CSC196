@@ -14,18 +14,14 @@
 #include <iostream>
 #include <string>
 
-float thrust{ 300 };
-
-std::vector<nc::Vector2> points = { { 5, -5 }, { 10, -5 }, { -5, 10 }, { -5, 5 } };
-nc::Color color{ 0, 1, 0 };
-nc::Shape ship;
+//float thrust{ 300 };
 
 nc::Player player;
 nc::Enemy enemy;
 
-nc::Vector2 velocity;
+//nc::Vector2 velocity;
 
-nc::Transform transform{ {400, 300}, 4.0f, 0.0f };
+//nc::Transform transform{ {400, 300}, 4.0f, 0.0f };
 
 float t{ 0 };
 
