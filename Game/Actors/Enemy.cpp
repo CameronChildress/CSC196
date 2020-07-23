@@ -1,43 +1,58 @@
 #include "Enemy.h"
 #include "Math/Math.h"
+#include "Graphics/ParticleSystem.h"
+#include "Object/Scene.h"
+#include "../Game.h"
 #include <fstream>
 
-namespace nc
+bool Enemy::Load(const std::string& filename)
 {
-    bool Enemy::Load(const std::string& filename)
+    bool success = false;
+
+    std::ifstream stream(filename);
+
+    if (stream.is_open())
     {
-        bool success = false;
+        success = true;
 
-        std::ifstream stream(filename);
+        // load the base actor members           
+        Actor::Load(stream);
 
-        if (stream.is_open())
-        {
-            success = true;
+        stream >> m_thrust;
 
-            // load the base actor members           
-            Actor::Load(stream);
-
-            stream >> m_thrust;
-
-            stream.close();
-        }
-
-        return success;
+        stream.close();
     }
 
-    void Enemy::Update(float dt)
+    return success;
+}
+
+void Enemy::Update(float dt)
+{
+    nc::Vector2 direction = m_target->GetTransform().position - m_transform.position;
+    nc::Vector2 enemyVelocity = direction.Normalized() * m_thrust;
+    m_transform.position += (enemyVelocity * dt);
+    m_transform.angle = std::atan2(direction.y, direction.x) + nc::DegreesToRadians(90.0f);
+
+    m_transform.Update();
+}
+
+void Enemy::Draw(Core::Graphics& graphics)
+{
+    m_shape.Draw(graphics, m_transform);
+}
+
+void Enemy::OnCollision(Actor* actor)
+{
+    if (actor->GetType() == eType::PROJECTILE)
     {
-        nc::Vector2 direction = m_target->GetTransform().position - m_transform.position;
-        nc::Vector2 enemyVelocity = direction.Normalized() * 100.0f;
-        m_transform.position += (enemyVelocity * dt);
-        m_transform.angle = std::atan2(direction.y, direction.x) + nc::DegreesToRadians(90.0f);
+        m_destroy = true;
 
-        m_transform.Update();
+        //set Game Score
+        m_scene->GetGame()->AddPoints(100);
+
+        nc::Color colors[] = { nc::Color::white, nc::Color::blue, nc::Color::yellow };
+        nc::Color color = colors[rand() % 3]; //0, 1, 2
+
+        g_particleSystem.Create(m_transform.position, 0, 180, 30, color, 1, 100, 200);
     }
-
-    void Enemy::Draw(Core::Graphics& graphics)
-    {
-        m_shape.Draw(graphics, m_transform);
-    }
-
 }

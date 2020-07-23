@@ -2,19 +2,23 @@
 
 #include "Object/Actor.h"
 
-namespace nc
+class Enemy : public nc::Actor
 {
-	class Enemy : public nc::Actor
-	{
-	public:
-		virtual bool Load(const std::string& filename) override;
-		virtual void Update(float dt) override;
-		virtual void Draw(Core::Graphics& graphics) override;
+public:
 
-		void SetTarget(Actor* actor) { m_target = actor; }
+	virtual eType GetType() { return eType::ENEMY; }
 
-	protected:
-		float m_thrust{ 0.0f };
-		Actor* m_target{ nullptr };
-	};
-}
+	virtual bool Load(const std::string& filename) override;
+	virtual void Update(float dt) override;
+	virtual void Draw(Core::Graphics& graphics) override;
+
+	virtual void OnCollision(Actor* actor);
+
+	void SetThrust(float thrust) { m_thrust = thrust; }
+
+	void SetTarget(Actor* actor) { m_target = actor; }
+
+protected:
+	float m_thrust{ 0.0f };
+	Actor* m_target{ nullptr };
+};

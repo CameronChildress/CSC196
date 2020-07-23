@@ -2,13 +2,14 @@
 
 #include "Object/Actor.h"
 
-class Player : public nc::Actor
+class Projectile : public nc::Actor
 {
 public:
-	Player() {}
-	virtual ~Player() {}
+	Projectile() = default;
+	virtual ~Projectile() {}
 
-	virtual eType GetType() { return eType::PLAYER; }
+	virtual eType GetType() { return eType::PROJECTILE; }
+
 
 	virtual bool Load(const std::string& filename) override;
 	virtual void Update(float dt) override;
@@ -16,11 +17,9 @@ public:
 
 	virtual void OnCollision(Actor* actor);
 
+	void SetThrust(float thrust) { m_thrust = thrust; }
 
 protected:
 	float m_thrust{ 0.0f };
-	float m_rotationRate{ 360.0f };
-	float m_fireRate{ 0.2f };
-	float m_fireTimer{ 0.0f };
-	nc::Vector2 m_velocity;
+	float m_lifetime{ 1 };
 };
